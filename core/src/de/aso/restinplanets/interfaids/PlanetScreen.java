@@ -158,7 +158,6 @@ public class PlanetScreen implements Screen {
 				String userInput = inputField.getText();
 				if(userInput != null) {
 					try {
-						Gdx.app.log("aidsbehaftet:", userInput);
 						planet = client.receivePlanet(Long.parseLong(userInput));
 						reDrawResources();
 					} catch (IOException e) {
