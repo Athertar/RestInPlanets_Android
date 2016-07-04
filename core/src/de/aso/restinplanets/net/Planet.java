@@ -82,4 +82,18 @@ public class Planet {
 
 	public long getAsoium() { return resources[ASOIUM]; }
 
+	public long getAluminiumTons() {
+		return resources[ALUMINIUM] / 1000l;
+	}
+
+	public long getTitaniumTons() {
+		return resources[TITANIUM] / 1000;
+	}
+
+	public long getSiliconTons() {
+		return resources[SILICON] / 1000;
+	}
+
+	public long getAsoiumTons() { return resources[ASOIUM] / 1000; }
+
 }

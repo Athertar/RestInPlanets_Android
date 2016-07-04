@@ -210,10 +210,10 @@ public class PlanetScreen implements Screen {
 
 	public void reDrawResources() {
 		if(planet != null) {
-			aluminiumAmount.setText("" + planet.getAluminium());
-			siliconAmount.setText("" + planet.getSilicon());
-			titaniumAmount.setText("" + planet.getTitanium());
-			asoiumAmount.setText("" + planet.getAsoium());
+			aluminiumAmount.setText("" + planet.getAluminiumTons());
+			siliconAmount.setText("" + planet.getSiliconTons());
+			titaniumAmount.setText("" + planet.getTitaniumTons());
+			asoiumAmount.setText("" + planet.getAsoiumTons());
 		}
 	}
 }
