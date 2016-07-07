@@ -4,11 +4,13 @@ public class DataPack {
 	public static final int PLANET_PACK = 1;
 	public static final int LOGIN_REQUEST = 3;
 	public static final int LOGIN_VERIFICATION = 4;
-	public static final int REQUEST_PACK = 0;
-	public static final int RESPONSE_PACK = 2;
 	public static final int PLANET_REQUEST = 5;
 	public static final int INVALID_PLANET_ID = 6;
 	public static final int INVALID_LOGIN = 7;
+	public static final int BUILDINGS_ON_PLANET = 8;
+	public static final int CONSTRUCTION_REQUEST = 9;
+	public static final int CONSTRUCTION_SUCCESS = 10;
+	public static final int CONSTRUCTION_FAILED = 11;
 
 	public int dataPackType;
 
@@ -24,10 +26,10 @@ public class DataPack {
 
 	@Override
 	public String toString() {
-		return "Booleans: " + booleans.length
-				+ " Bytes: " + bytes.length
-				+ " Integers: " + integers.length
-				+ " Longs: " + longs.length
-				+ " Strings: " + strings.length;
+		return "Booleans: " + (booleans != null ? booleans.length : 0)
+				+ " Bytes: " + (bytes != null ? bytes.length : 0)
+				+ " Integers: " + (integers != null ? integers.length : 0)
+				+ " Longs: " + (longs != null ? longs.length : 0)
+				+ " Strings: " + (strings != null ? strings.length : 0);
 	}
 }

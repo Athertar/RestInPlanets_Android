@@ -36,7 +36,6 @@ public class Planet {
 	public synchronized void update(float delta) {
 		for (int i = 0; i < resources.length; i++) {
 			resources[i] += resourcesChange[i];
-			Gdx.app.log("Aso", "" + delta);
 		}
 	}
 

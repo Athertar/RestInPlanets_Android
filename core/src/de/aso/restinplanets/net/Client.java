@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Client {
@@ -47,11 +48,30 @@ public class Client {
 		this.dataPackWriter = dataPackWriter;
 	}
 
-	public Planet receivePlanet(long ID) throws IOException {
+	public Planet requestPlanet(long ID) throws IOException {
 		DataPack planetRequest = new DataPack(DataPack.PLANET_REQUEST);
 		planetRequest.longs = new long[] {ID};
 		dataPackWriter.writeDataPack(planetRequest);
-		return new Planet(dataPackReader.readDataPack());
+		DataPack planetResponse = dataPackReader.readDataPack();
+		if (planetResponse.dataPackType == DataPack.INVALID_PLANET_ID) {
+			return null;
+		} else {
+			return new Planet(planetResponse);
+		}
+	}
+
+	public ArrayList<Building> requestBuildingsOnPlanet(long ID) throws IOException {
+		DataPack buildingRequest = new DataPack(DataPack.BUILDINGS_ON_PLANET);
+		buildingRequest.longs = new long[] {ID};
+		dataPackWriter.writeDataPack(buildingRequest);
+		return Building.getFromDataPack(dataPackReader.readDataPack());
+	}
+
+	public DataPack requestConstruction(long planetID, long buildingID) throws IOException {
+		DataPack constructionRequest = new DataPack(DataPack.CONSTRUCTION_REQUEST);
+		constructionRequest.longs = new long[] { planetID, buildingID };
+		dataPackWriter.writeDataPack(constructionRequest);
+		return dataPackReader.readDataPack();
 	}
 
 }
