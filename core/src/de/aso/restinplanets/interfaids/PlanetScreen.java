@@ -158,7 +158,7 @@ public class PlanetScreen implements Screen {
 				String userInput = inputField.getText();
 				if(userInput != null) {
 					try {
-						planet = client.receivePlanet(Long.parseLong(userInput));
+						planet = client.requestPlanet(Long.parseLong(userInput));
 						reDrawResources();
 					} catch (IOException e) {
 						e.printStackTrace();
