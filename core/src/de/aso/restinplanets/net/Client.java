@@ -1,6 +1,6 @@
 package de.aso.restinplanets.net;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -14,43 +14,52 @@ public class Client {
 	private DataPackReader dataPackReader;
 	private DataPackWriter dataPackWriter;
 
-	public static Client connect(InetAddress inetAddress, int port, String username, String password) throws IOException {
-		try {
-			Socket socket = new Socket(inetAddress, port);
-			DataPackReader dataPackReader  = new DataPackReader(socket.getInputStream());
-			DataPackWriter dataPackWriter = new DataPackWriter(socket.getOutputStream());
+	public Client(InetAddress inetAddress, int port) throws IOException {
+		this.socket = new Socket(inetAddress, port);
+		this.dataPackReader = new DataPackReader(socket.getInputStream());
+		this.dataPackWriter = new DataPackWriter(socket.getOutputStream());
+	}
 
-			Random r = new Random();
-			long salt = r.nextLong();
+	/**
+	 * sends a verifications request to the server
+	 *
+	 * @param username
+	 * @param password
+	 * @return true if verification succeeded
+	 * @throws NoSuchAlgorithmException
+	 * @throws IOException
+	 */
+	public boolean verify(String username, String password) throws NoSuchAlgorithmException, IOException {
+		Random r = new Random();
+		long salt = r.nextLong();
 
-			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-			password = password + salt;
-			messageDigest.update(password.getBytes());DataPack loginRequest = new DataPack(DataPack.LOGIN_REQUEST);
-			loginRequest.strings = new String[] {username};
-			loginRequest.bytes = messageDigest.digest();
-			loginRequest.longs = new long[] {salt};
-			dataPackWriter.writeDataPack(loginRequest);
+		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+		password = password + salt;
+		messageDigest.update(password.getBytes());
+		DataPack loginRequest = new DataPack(DataPack.LOGIN_REQUEST);
+		loginRequest.strings = new String[]{username};
+		loginRequest.bytes = messageDigest.digest();
+		loginRequest.longs = new long[]{salt};
+		dataPackWriter.writeDataPack(loginRequest);
 
-			DataPack verification =  dataPackReader.readDataPack();
-			if (verification.longs[0] == loginRequest.longs[0]) {
-				return new Client(socket, dataPackReader, dataPackWriter);
-			} else {
-				return null;
-			}
-		} catch (NoSuchAlgorithmException e) {
-			return null;
+		DataPack verification = dataPackReader.readDataPack();
+		if (verification.longs[0] == loginRequest.longs[0]) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
-	private Client(Socket socket, DataPackReader dataPackReader, DataPackWriter dataPackWriter) throws IOException {
-		this.socket = socket;
-		this.dataPackReader = dataPackReader;
-		this.dataPackWriter = dataPackWriter;
-	}
-
+	/**
+	 * Requests a planet from the Server.
+	 *
+	 * @param ID
+	 * @return null if planet does not exist
+	 * @throws IOException
+	 */
 	public Planet requestPlanet(long ID) throws IOException {
 		DataPack planetRequest = new DataPack(DataPack.PLANET_REQUEST);
-		planetRequest.longs = new long[] {ID};
+		planetRequest.longs = new long[]{ID};
 		dataPackWriter.writeDataPack(planetRequest);
 		DataPack planetResponse = dataPackReader.readDataPack();
 		if (planetResponse.dataPackType == DataPack.INVALID_PLANET_ID) {
@@ -60,18 +69,47 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Requests all buildings on a specific planet.
+	 * List is empty when the planet does not contain any
+	 * buildings.
+	 *
+	 * @param ID
+	 * @return null if the planet is invalid
+	 * @throws IOException
+	 */
 	public ArrayList<Building> requestBuildingsOnPlanet(long ID) throws IOException {
 		DataPack buildingRequest = new DataPack(DataPack.BUILDINGS_ON_PLANET);
-		buildingRequest.longs = new long[] {ID};
+		buildingRequest.longs = new long[]{ID};
 		dataPackWriter.writeDataPack(buildingRequest);
 		return Building.getFromDataPack(dataPackReader.readDataPack());
 	}
 
-	public DataPack requestConstruction(long planetID, long buildingID) throws IOException {
+	/**
+	 * Requests the construction of a building on a specific planet.
+	 *
+	 * @param planetID
+	 * @param buildingID
+	 * @return true if construction succeeded
+	 * @throws IOException
+	 */
+	public boolean requestConstruction(long planetID, long buildingID) throws IOException {
 		DataPack constructionRequest = new DataPack(DataPack.CONSTRUCTION_REQUEST);
-		constructionRequest.longs = new long[] { planetID, buildingID };
+		constructionRequest.longs = new long[]{planetID, buildingID};
 		dataPackWriter.writeDataPack(constructionRequest);
-		return dataPackReader.readDataPack();
+		DataPack constructionResponse = dataPackReader.readDataPack();
+		return constructionResponse.dataPackType == DataPack.CONSTRUCTION_SUCCESS;
 	}
 
+	public ArrayList<Planet> requestPlayersPlanets(String playerName) throws IOException {
+		DataPack request = new DataPack(DataPack.REQUEST_PLAYERS_PLANETS);
+		request.strings = new String[]{playerName};
+		dataPackWriter.writeDataPack(request);
+		ArrayList<Planet> planets = new ArrayList<Planet>();
+		DataPack response;
+		while ((response = dataPackReader.readDataPack()).dataPackType != DataPack.END_PLANET_LIST) {
+			planets.add(new Planet(response));
+		}
+		return planets;
+	}
 }

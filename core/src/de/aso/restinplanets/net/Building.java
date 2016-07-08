@@ -3,6 +3,9 @@ package de.aso.restinplanets.net;
 import java.util.ArrayList;
 
 public class Building {
+	private static final float TONS = 1000f;
+	private static final float MILLISECONDS_PER_SECOND = 1000f;
+	private static final float TICK_TIME = 16f;
 
 	private long planetID;
 	private long buildingType;
@@ -43,10 +46,28 @@ public class Building {
 	@Override
 	public String toString() {
 		return name
-				+ " Titanium Per Tick: " + resourcesChange[0]
-				+ " Aluminium Per Tick: " + resourcesChange[1]
-				+ " Silicon Per Tick: " + resourcesChange[2]
-				+ " Asoium Per Tick: " + resourcesChange[3];
+				+ " Titanium: " + getTitaniumTonsPerSecond() + " tons per second"
+				+ " Aluminium: " + getAluminiumTonsPerSecond() + " tons per second"
+				+ " Silicon: " + getSiliconTonsPerSecond() + " tons per second"
+				+ " Asoium: " + getAsoiumTonsPerSecond() + " tons per second";
+	}
+
+	public float getTitaniumTonsPerSecond() {
+		return (resourcesChange[0] * MILLISECONDS_PER_SECOND) / (TONS * TICK_TIME);
+	}
+
+	public float getAluminiumTonsPerSecond() {
+		return (resourcesChange[1] * MILLISECONDS_PER_SECOND) / (TONS * TICK_TIME);
+	}
+
+	public float getSiliconTonsPerSecond() {
+		return (resourcesChange[2] * MILLISECONDS_PER_SECOND) / (TONS * TICK_TIME);
+	}
+
+	public float getAsoiumTonsPerSecond() {
+		return (resourcesChange[3] * MILLISECONDS_PER_SECOND) / (TONS * TICK_TIME);
 	}
 
 }
+
+

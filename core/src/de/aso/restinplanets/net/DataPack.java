@@ -11,6 +11,9 @@ public class DataPack {
 	public static final int CONSTRUCTION_REQUEST = 9;
 	public static final int CONSTRUCTION_SUCCESS = 10;
 	public static final int CONSTRUCTION_FAILED = 11;
+	public static final int REQUEST_PLAYERS_PLANETS = 12;
+	public static final int END_PLANET_LIST = 13;
+	public static final int INVALID_PLAYER_NAME = 14;
 
 	public int dataPackType;
 

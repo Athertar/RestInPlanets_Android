@@ -1,36 +1,32 @@
 package de.aso.restinplanets.net;
 
-import com.badlogic.gdx.Gdx;
-
 import java.util.Arrays;
-
-import sun.rmi.runtime.Log;
 
 public class Planet {
 
-	public static final int TITANIUM = 0;
-	public static final int SILICON = 1;
-	public static final int ALUMINIUM = 2;
-	public static final int ASOIUM = 3;
-	public static final int AMOUNT_RESOURCES = 4;
+	private static final int TONS = 1000;
+	private static final int TITANIUM = 0;
+	private static final int ALUMINIUM = 1;
+	private static final int SILICON = 2;
+	private static final int ASOIUM = 3;
+	private static final int AMOUNT_RESOURCES = 4;
 
 	private long planetID;
-
+	private long lastIterated;
+	private String owner;
 	private long[] resources = new long[AMOUNT_RESOURCES];
 	private int[] resourcesChange = new int[AMOUNT_RESOURCES];
 
-	public Planet(long planetID, long[] resources, int[] resourcesChange, long lastIterated) {
+	public Planet(long planetID, long[] resources, int[] resourcesChange, long lastIterated, String owner) {
 		this.planetID = planetID;
 		this.resources = resources;
 		this.resourcesChange = resourcesChange;
+		this.lastIterated = lastIterated;
+		this.owner = owner;
 	}
 
 	public Planet(DataPack dataPack) {
 		this.set(dataPack);
-	}
-
-	public long getPlanetID() {
-		return planetID;
 	}
 
 	public synchronized void update(float delta) {
@@ -39,16 +35,26 @@ public class Planet {
 		}
 	}
 
-	public synchronized void set(DataPack dataPack) {
+	public void update(long iterationCount) {
+		long delta = iterationCount - lastIterated;
+		//TODO Save Math function with Data for integration
+		for (int i = 0; i < resources.length; i++) {
+			resources[i] += resourcesChange[i] * delta;
+		}
+		lastIterated = iterationCount;
+	}
+
+	public void set(DataPack dataPack) {
 		planetID = dataPack.longs[0];
 		for (int i = 0; i < resources.length; i++) {
 			resources[i] = dataPack.longs[i + 2];
 		}
 		System.arraycopy(dataPack.integers, 0, resourcesChange, 0, resourcesChange.length);
 		dataPack.integers = Arrays.copyOf(resourcesChange, resourcesChange.length);
+		owner = dataPack.strings[0];
 	}
 
-	public synchronized DataPack getUpdatePack() {
+	public DataPack getUpdatePack() {
 		DataPack dataPack = new DataPack(DataPack.PLANET_PACK);
 		dataPack.longs = new long[resources.length + 2];
 		dataPack.longs[0] = planetID;
@@ -56,15 +62,33 @@ public class Planet {
 			dataPack.longs[i + 2] = resources[i];
 		}
 		dataPack.integers = Arrays.copyOf(resourcesChange, resourcesChange.length);
+		dataPack.strings = new String[] { this.owner };
 		return dataPack;
+	}
+
+	public boolean takeResources(int[] costs) {
+		for (int i = 0; i < resources.length; i++) {
+			if (costs[i] > resources[i]) return false;
+		}
+		for (int i = 0; i < resources.length; i++) {
+			resources[i] -= costs[i];
+		}
+		return true;
+	}
+
+	public void addResourcesChange(int[] change) {
+		for (int i = 0; i < resources.length; i++) {
+			resourcesChange[i] += change[i];
+		}
 	}
 
 	@Override
 	public String toString() {
-		return " Amount Aluminium: " + resources[ALUMINIUM]
-				+ " Amount Titanium: " + resources[TITANIUM]
-				+ " Amount Silicon: " + resources[SILICON]
-				+ " Amount Asoium: " + resources[ASOIUM];
+		return "Planet " + planetID + " (" + owner + "):"
+				+ " Titanium: " + getTitaniumTons() + " tons"
+				+ " Aluminium: " + getAluminiumTons() + " tons"
+				+ " Silicon: " + getSiliconTons() + " tons"
+				+ " Asoium: " + getAsoiumTons() + " tons";
 	}
 
 	public long getAluminium() {
@@ -79,20 +103,29 @@ public class Planet {
 		return resources[SILICON];
 	}
 
-	public long getAsoium() { return resources[ASOIUM]; }
+	public long getAsoium() {
+		return resources[ASOIUM];
+	}
+
+	public long getPlanetID() {
+		return planetID;
+	}
+
+	public long getLastIterated() {
+		return lastIterated;
+	}
 
 	public long getAluminiumTons() {
-		return resources[ALUMINIUM] / 1000l;
+		return getAluminium() / TONS;
 	}
 
 	public long getTitaniumTons() {
-		return resources[TITANIUM] / 1000;
+		return getTitanium() / TONS;
 	}
 
 	public long getSiliconTons() {
-		return resources[SILICON] / 1000;
+		return getSilicon() / TONS;
 	}
 
-	public long getAsoiumTons() { return resources[ASOIUM] / 1000; }
-
+	public long getAsoiumTons() { return getAsoium() / TONS; }
 }

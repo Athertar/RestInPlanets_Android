@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -18,17 +17,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.security.NoSuchAlgorithmException;
 
 import de.aso.restinplanets.net.Client;
+import de.aso.restinplanets.util.FontCreator;
 
 import static com.badlogic.gdx.Input.Keys.CENTER;
 
-public class MenuScreen implements Screen {
+public class LoginScreen implements Screen {
 
 	private SpriteBatch spriteBatch;
 
-	private FreeTypeFontGenerator generator;
-	private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+	private FontCreator fontCreator;
 
 	private BitmapFont textFont;
 	private BitmapFont smallTextFont;
@@ -54,9 +54,9 @@ public class MenuScreen implements Screen {
 
 
 	private Main main;
+	private Client client;
 
-
-	public MenuScreen(Main main) {
+	public LoginScreen(Main main) {
 		this.main = main;
 		spriteBatch = new SpriteBatch();
 		create();
@@ -106,17 +106,17 @@ public class MenuScreen implements Screen {
 		buttonSkin = new Skin();
 		textFieldSkin = new Skin();
 
-		generator = new FreeTypeFontGenerator(Gdx.files.internal("LemonMilk.otf"));
-		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = 46;
-		parameter.borderWidth = 4;
-		parameter.shadowOffsetX = 2;
-		parameter.shadowOffsetY = 2;
-		parameter.spaceX = 5;
-		smallTextFont = generator.generateFont(parameter);
-		parameter.size = 96;
-		textFont = generator.generateFont(parameter);
-		generator.dispose();
+		try {
+			client = new Client(InetAddress.getByName("192.168.1.8"), 6666);
+		} catch (IOException e) {
+			//TODO
+			e.printStackTrace();
+		}
+
+		fontCreator = new FontCreator("LemonMilk.otf", 4, 2, 2, 5);
+		textFont = fontCreator.generateFont(96);
+		smallTextFont = fontCreator.generateFont(46);
+		fontCreator.dispose();
 
 		buttonSkin.add("default", textFont);
 		textFieldSkin.add("default", smallTextFont);
@@ -145,6 +145,8 @@ public class MenuScreen implements Screen {
 		textFieldStyle.background = textFieldSkin.newDrawable("background", Color.LIGHT_GRAY);
 		textFieldSkin.add("default", textFieldStyle);
 
+
+
 		loginButton = new TextButton("log in", buttonSkin);
 		loginButton.setPosition(borderOffset, Gdx.graphics.getHeight() - 7* textFieldLetterHeight);
 		loginButton.setHeight(buttonLetterHeight);
@@ -156,14 +158,16 @@ public class MenuScreen implements Screen {
 				String password = passwordInput.getText();
 				if (account != null && password != null) {
 					try {
-						Client client = Client.connect(InetAddress.getByName("192.168.1.11"), 6666, account, password);
-						if (client == null) {
-							Gdx.app.log("Login is cancr" ,"jup");
+						if (client.verify(account, password)) {
+							Gdx.app.log("Login Screen", "Verification successful");
+							main.setScreen(new PlanetSelectionScreen(client, main, account));
 						} else {
-							Gdx.app.log("Was machen sachen", "jup");
-							main.setScreen(new PlanetScreen(client));
+							Gdx.app.log("Login Screen", "Verification failed");
+							//TODO
 						}
 					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (NoSuchAlgorithmException e) {
 						e.printStackTrace();
 					}
 				}
