@@ -51,8 +51,8 @@ public class LoginScreen implements Screen {
 
 	public LoginScreen(Main main) {
 		this.main = main;
-		textFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, 64);
-		smallTextFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, 64);
+		textFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, 96);
+		smallTextFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, 46);
 	}
 
 	@Override
@@ -102,6 +102,7 @@ public class LoginScreen implements Screen {
 					try {
 						if (main.client.verify(account, password)) {
 							Gdx.app.log("Login Screen", "Verification successful");
+							Gdx.input.setOnscreenKeyboardVisible(false);
 							main.setScreen(new PlanetSelectionScreen(main.client, main, account));
 						} else {
 							Gdx.app.log("Login Screen", "Verification failed");
