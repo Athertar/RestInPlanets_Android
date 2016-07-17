@@ -19,7 +19,7 @@ import de.aso.restinplanets.util.FontCreator;
 
 import static com.badlogic.gdx.Input.Keys.CENTER;
 
-public class PlanetGroup extends Group{
+public class PlanetGroup extends Group {
 
 	private Planet planet;
 
@@ -48,22 +48,6 @@ public class PlanetGroup extends Group{
 		this.planet = planet;
 		create();
 	}
-
-	/*public PlanetGroup(Planet planet, FontCreator fontCreator) {
-		this.planet = planet;
-		this.fontCreator = fontCreator;
-		create();
-		this.fontCreator.dispose();
-	}
-
-	public PlanetGroup(Planet planet, FontCreator fontCreator, int textFontSize, int smallTextFontSize) {
-		this.planet = planet;
-		this.fontCreator = fontCreator;
-		this.textFont = fontCreator.generateFont(textFontSize);
-		this.smallTextFont = fontCreator.generateFont(smallTextFontSize);
-		create();
-		this.fontCreator.dispose();
-	}*/
 
 	public void create() {
 		buttonSkin = new Skin();
@@ -133,21 +117,5 @@ public class PlanetGroup extends Group{
 		siliconAmount.setText("" + planet.getSiliconTons()+ " K");
 		titaniumAmount.setText("" + planet.getTitaniumTons()+ " K");
 		asoiumAmount.setText("" + planet.getAsoiumTons()+ " K");
-	}
-
-	public TextField getAluminiumAmount() {
-		return aluminiumAmount;
-	}
-
-	public TextField getSiliconAmount() {
-		return siliconAmount;
-	}
-
-	public TextField getTitaniumAmount() {
-		return titaniumAmount;
-	}
-
-	public TextField getAsoiumAmount() {
-		return asoiumAmount;
 	}
 }

@@ -18,81 +18,40 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import de.aso.restinplanets.util.FontCreator;
+import de.aso.restinplanets.util.RIPStyle;
 
 import static com.badlogic.gdx.Input.Keys.CENTER;
 
 public class LoginScreen implements Screen {
 
-	private FontCreator fontCreator;
-
-	private BitmapFont textFont;
-	private BitmapFont smallTextFont;
-
-	private Skin buttonSkin;
-	private Skin textFieldSkin;
-
-	private Pixmap pixmap;
-
 	private Stage stage;
 
-	private float buttonLetterHeight;
-	private float textFieldLetterHeight;
-	private float borderOffset = 20f;
-
-	private TextButton.TextButtonStyle textButtonStyle;
 	private TextButton loginButton;
 	private TextButton signUpButton;
-
-	private TextField.TextFieldStyle textFieldStyle;
 	private TextField accountInput;
 	private TextField passwordInput;
+
+	private float buttonHeight = 200;
+	private float buttonWidth = 400;
+	private float textFieldWidth = 400;
+	private float textFieldHeight = 200;
 
 	private Main main;
 
 	public LoginScreen(Main main) {
 		this.main = main;
-		textFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, 96);
-		smallTextFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, 46);
 	}
 
 	@Override
 	public void show() {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
-		buttonSkin = new Skin();
-		textFieldSkin = new Skin();
 
-		buttonSkin.add("default", textFont);
-		textFieldSkin.add("default", smallTextFont);
-
-		textFieldLetterHeight = 3*smallTextFont.getXHeight();
-		buttonLetterHeight = 3*textFont.getXHeight();
-
-		pixmap = new Pixmap(Gdx.graphics.getWidth()/4,Gdx.graphics.getWidth(), Pixmap.Format.RGB888);
-		pixmap.setColor(Color.WHITE);
-		pixmap.fill();
-
-		buttonSkin.add("background", new Texture(pixmap));
-		textFieldSkin.add("background", new Texture(pixmap));
-
-		textButtonStyle = new TextButton.TextButtonStyle();
-		textButtonStyle.up = buttonSkin.newDrawable("background", Color.GRAY);
-		textButtonStyle.down = buttonSkin.newDrawable("background", Color.DARK_GRAY);
-		textButtonStyle.checked = buttonSkin.newDrawable("background", Color.DARK_GRAY);
-		textButtonStyle.over = buttonSkin.newDrawable("background", Color.LIGHT_GRAY);
-		textButtonStyle.font = buttonSkin.getFont("default");
-		buttonSkin.add("default", textButtonStyle);
-
-		textFieldStyle = new TextField.TextFieldStyle();
-		textFieldStyle.font = textFieldSkin.getFont("default");
-		textFieldStyle.fontColor = Color.WHITE;
-		textFieldStyle.background = textFieldSkin.newDrawable("background", Color.LIGHT_GRAY);
-		textFieldSkin.add("default", textFieldStyle);
-
-		loginButton = new TextButton("log in", buttonSkin);
-		loginButton.setPosition(borderOffset, Gdx.graphics.getHeight() - 7* textFieldLetterHeight);
-		loginButton.setHeight(buttonLetterHeight);
-		loginButton.setWidth(Gdx.graphics.getWidth() / 2 - borderOffset);
+		loginButton = new TextButton("log in", RIPStyle.getButtonSkin(buttonHeight));
+		float borderOffset = 20f;
+		loginButton.setPosition(borderOffset, Gdx.graphics.getHeight() / 2 - buttonHeight);
+		loginButton.setHeight(buttonHeight);
+		loginButton.setWidth(buttonWidth - borderOffset);
 		loginButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -103,7 +62,7 @@ public class LoginScreen implements Screen {
 						if (main.client.verify(account, password)) {
 							Gdx.app.log("Login Screen", "Verification successful");
 							Gdx.input.setOnscreenKeyboardVisible(false);
-							main.setScreen(new PlanetSelectionScreen(main.client, main, account));
+							main.showPlanetSelectionScreen(account);
 						} else {
 							Gdx.app.log("Login Screen", "Verification failed");
 							//TODO
@@ -118,26 +77,26 @@ public class LoginScreen implements Screen {
 		});
 		stage.addActor(loginButton);
 
-		signUpButton = new TextButton("sign up", buttonSkin);
-		signUpButton.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 7* textFieldLetterHeight);
-		signUpButton.setHeight(buttonLetterHeight);
-		signUpButton.setWidth(Gdx.graphics.getWidth() / 2 - borderOffset);
+		signUpButton = new TextButton("sign up", RIPStyle.getButtonSkin(buttonHeight));
+		signUpButton.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 - buttonHeight);
+		signUpButton.setHeight(buttonHeight);
+		signUpButton.setWidth(buttonWidth - borderOffset);
 		stage.addActor(signUpButton);
 
-		accountInput = new TextField("", textFieldSkin);
+		accountInput = new TextField("", RIPStyle.getTextFieldSkin(textFieldHeight));
 		accountInput.setMessageText("account:");
 		accountInput.setAlignment(CENTER);
-		accountInput.setWidth(Gdx.graphics.getWidth() - 2*borderOffset);
-		accountInput.setHeight(3*smallTextFont.getXHeight());
-		accountInput.setPosition(borderOffset, Gdx.graphics.getHeight() - 2* textFieldLetterHeight);
+		accountInput.setWidth(Gdx.graphics.getWidth() - 2* borderOffset);
+		accountInput.setHeight(textFieldHeight);
+		accountInput.setPosition(borderOffset, Gdx.graphics.getHeight() - 2 * textFieldHeight);
 		stage.addActor(accountInput);
 
-		passwordInput = new TextField("", textFieldSkin);
+		passwordInput = new TextField("", RIPStyle.getTextFieldSkin(textFieldHeight));
 		passwordInput.setMessageText("password:");
 		passwordInput.setAlignment(CENTER);
-		passwordInput.setWidth(Gdx.graphics.getWidth() - 2*borderOffset);
-		passwordInput.setHeight(3*smallTextFont.getXHeight());
-		passwordInput.setPosition(borderOffset, Gdx.graphics.getHeight() - 4* textFieldLetterHeight);
+		passwordInput.setWidth(Gdx.graphics.getWidth() - 2* borderOffset);
+		passwordInput.setHeight(textFieldHeight);
+		passwordInput.setPosition(borderOffset, Gdx.graphics.getHeight() - 4 * textFieldHeight);
 		passwordInput.setPasswordMode(true);
 		stage.addActor(passwordInput);
 	}

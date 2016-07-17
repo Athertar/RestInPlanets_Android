@@ -21,35 +21,42 @@ import java.util.ArrayList;
 import de.aso.restinplanets.net.Client;
 import de.aso.restinplanets.net.Planet;
 import de.aso.restinplanets.util.FontCreator;
+import de.aso.restinplanets.util.RIPStyle;
 
 public class PlanetSelectionScreen implements Screen {
 
 
-	private Client client;
-	private TextButton planetButton;
-	private TextButton.TextButtonStyle textButtonStyle;
-	private Skin textFieldSkin;
-	private Skin buttonSkin;
-	private float borderOffset = 20f;
 	private Stage stage;
 	private Main main;
-	private PlanetGroup planetStage;
-	private Pixmap pixmap;
-	private float buttonHeight = 200;
 	private ArrayList<Planet> planets;
-	private Table layoutTable;
 
 
-	public PlanetSelectionScreen(Client client, Main main, String user) throws IOException {
-		this.client = client;
+	public PlanetSelectionScreen(ArrayList<Planet> planets, Main main) throws IOException {
 		this.main = main;
-		this.planets = client.requestPlayersPlanets(user);
-		create();
+		this.planets = planets;
 	}
 
 	@Override
 	public void show() {
+		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
 
+		Table layoutTable = new Table();
+		//layoutTable.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		stage.addActor(layoutTable);
+		layoutTable.left().top();
+		layoutTable.setFillParent(true);
+
+		float buttonHeight = 200;
+
+		for (int i = 0; i < planets.size(); i++) {
+			TextButton planetButton = new TextButton("Planet " + planets.get(i).getPlanetID(), RIPStyle.getButtonSkin(200));
+			planetButton.addListener(new PlanetSelectionListener(planets.get(i)));
+			layoutTable.add(planetButton).height(buttonHeight).expandX();
+			if(i%2 == 1) {
+				layoutTable.row();
+			}
+		}
 	}
 
 	@Override
@@ -83,49 +90,6 @@ public class PlanetSelectionScreen implements Screen {
 	@Override
 	public void dispose() {
 
-	}
-
-	public void create() {
-		stage = new Stage();
-		Gdx.input.setInputProcessor(stage);
-
-		layoutTable = new Table();
-		//layoutTable.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		stage.addActor(layoutTable);
-		layoutTable.left().top();
-		layoutTable.setFillParent(true);
-
-		buttonSkin = new Skin();
-		textFieldSkin = new Skin();
-
-		BitmapFont bitmapFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, (int) buttonHeight / 3);
-
-		buttonSkin.add("default", bitmapFont);
-
-		pixmap = new Pixmap(Gdx.graphics.getWidth() / 4 ,Gdx.graphics.getHeight() / 4, Pixmap.Format.RGB888);
-		pixmap.setColor(Color.WHITE);
-		pixmap.fill();
-
-		buttonSkin.add("background", new Texture(pixmap));
-		textFieldSkin.add("background", new Texture(pixmap));
-
-		textButtonStyle = new TextButton.TextButtonStyle();
-		textButtonStyle.up = buttonSkin.newDrawable("background", Color.GRAY);
-		textButtonStyle.down = buttonSkin.newDrawable("background", Color.DARK_GRAY);
-		textButtonStyle.checked = buttonSkin.newDrawable("background", Color.DARK_GRAY);
-		textButtonStyle.over = buttonSkin.newDrawable("background", Color.LIGHT_GRAY);
-		textButtonStyle.font = buttonSkin.getFont("default");
-		buttonSkin.add("default", textButtonStyle);
-
-
-		for (int i = 0; i < planets.size(); i++) {
-			planetButton = new TextButton("Planet " + planets.get(i).getPlanetID(), buttonSkin);
-			planetButton.addListener(new PlanetSelectionListener(planets.get(i)));
-			layoutTable.add(planetButton).height(buttonHeight).expandX();
-			if(i%2 == 1) {
-				layoutTable.row();
-			}
-		}
 	}
 
 	private class PlanetSelectionListener extends ChangeListener {
