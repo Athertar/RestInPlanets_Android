@@ -13,9 +13,7 @@ public class RIPStyle {
 
 	public static Skin getButtonSkin(float buttonHeight) {
 		Skin buttonSkin = new Skin();
-
 		BitmapFont bitmapFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, (int) buttonHeight / 3);
-
 		buttonSkin.add("default", bitmapFont);
 
 		Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 4, Pixmap.Format.RGB888);
