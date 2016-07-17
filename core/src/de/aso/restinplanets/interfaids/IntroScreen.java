@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-class IntroScreen implements Screen, InputProcessor {
+public class IntroScreen implements Screen {
 
 	private PerspectiveCamera cam;
 	private ModelBatch modelBatch;
@@ -26,16 +26,12 @@ class IntroScreen implements Screen, InputProcessor {
 	private float angle;
 	private float angleSpeed = 0.02f;
 	private ModelInstance shipInstance;
-	private Main main;
 
-	IntroScreen(Main main) {
-		this.main = main;
+	IntroScreen() {
 		modelBatch = new ModelBatch();
 		environment = new Environment();
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
-		Gdx.input.setInputProcessor(this);
 
 		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0f, 0f, distance);
@@ -106,46 +102,5 @@ class IntroScreen implements Screen, InputProcessor {
 	@Override
 	public void show() {
 
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		main.showLoginScreen();
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
 	}
 }

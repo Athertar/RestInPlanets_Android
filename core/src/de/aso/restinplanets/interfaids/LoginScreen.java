@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,17 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
 
-import de.aso.restinplanets.net.Client;
 import de.aso.restinplanets.util.FontCreator;
 
 import static com.badlogic.gdx.Input.Keys.CENTER;
 
 public class LoginScreen implements Screen {
-
-	private SpriteBatch spriteBatch;
 
 	private FontCreator fontCreator;
 
@@ -52,72 +47,22 @@ public class LoginScreen implements Screen {
 	private TextField accountInput;
 	private TextField passwordInput;
 
-
 	private Main main;
-	private Client client;
 
 	public LoginScreen(Main main) {
 		this.main = main;
-		spriteBatch = new SpriteBatch();
-		create();
+		fontCreator = new FontCreator("LemonMilk.otf", 4, 2, 2, 5);
+		textFont = fontCreator.generateFont(64);
+		smallTextFont = fontCreator.generateFont(46);
+		fontCreator.dispose();
 	}
 
 	@Override
 	public void show() {
-
-	}
-
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		stage.act(delta);
-		stage.draw();
-	}
-
-	@Override
-	public void resize(int width, int height) {
-
-	}
-
-	@Override
-	public void pause() {
-
-	}
-
-	@Override
-	public void resume() {
-
-	}
-
-	@Override
-	public void hide() {
-
-	}
-
-	@Override
-	public void dispose() {
-
-	}
-
-	public void create() {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 		buttonSkin = new Skin();
 		textFieldSkin = new Skin();
-
-		try {
-			//client = new Client(InetAddress.getByName("192.168.1.8"), 6666);
-			client = new Client(InetAddress.getByName("restinplanets.ddns.net"), 6666);
-		} catch (IOException e) {
-			//TODO
-			e.printStackTrace();
-		}
-
-		fontCreator = new FontCreator("LemonMilk.otf", 4, 2, 2, 5);
-		textFont = fontCreator.generateFont(96);
-		smallTextFont = fontCreator.generateFont(46);
-		fontCreator.dispose();
 
 		buttonSkin.add("default", textFont);
 		textFieldSkin.add("default", smallTextFont);
@@ -146,8 +91,6 @@ public class LoginScreen implements Screen {
 		textFieldStyle.background = textFieldSkin.newDrawable("background", Color.LIGHT_GRAY);
 		textFieldSkin.add("default", textFieldStyle);
 
-
-
 		loginButton = new TextButton("log in", buttonSkin);
 		loginButton.setPosition(borderOffset, Gdx.graphics.getHeight() - 7* textFieldLetterHeight);
 		loginButton.setHeight(buttonLetterHeight);
@@ -159,9 +102,9 @@ public class LoginScreen implements Screen {
 				String password = passwordInput.getText();
 				if (account != null && password != null) {
 					try {
-						if (client.verify(account, password)) {
+						if (main.client.verify(account, password)) {
 							Gdx.app.log("Login Screen", "Verification successful");
-							main.setScreen(new PlanetSelectionScreen(client, main, account));
+							main.setScreen(new PlanetSelectionScreen(main.client, main, account));
 						} else {
 							Gdx.app.log("Login Screen", "Verification failed");
 							//TODO
@@ -198,6 +141,38 @@ public class LoginScreen implements Screen {
 		passwordInput.setPosition(borderOffset, Gdx.graphics.getHeight() - 4* textFieldLetterHeight);
 		passwordInput.setPasswordMode(true);
 		stage.addActor(passwordInput);
+	}
+
+	@Override
+	public void render(float delta) {
+		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		stage.act(delta);
+		stage.draw();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+
+	}
+
+	@Override
+	public void pause() {
+
+	}
+
+	@Override
+	public void resume() {
+
+	}
+
+	@Override
+	public void hide() {
+
+	}
+
+	@Override
+	public void dispose() {
 
 	}
 }
