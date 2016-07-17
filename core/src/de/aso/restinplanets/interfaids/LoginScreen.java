@@ -107,7 +107,8 @@ public class LoginScreen implements Screen {
 		textFieldSkin = new Skin();
 
 		try {
-			client = new Client(InetAddress.getByName("192.168.1.8"), 6666);
+			//client = new Client(InetAddress.getByName("192.168.1.8"), 6666);
+			client = new Client(InetAddress.getByName("restinplanets.ddns.net"), 6666);
 		} catch (IOException e) {
 			//TODO
 			e.printStackTrace();
