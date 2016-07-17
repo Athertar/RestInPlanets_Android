@@ -98,8 +98,7 @@ public class PlanetSelectionScreen implements Screen {
 		buttonSkin = new Skin();
 		textFieldSkin = new Skin();
 
-		FontCreator fontCreator = new FontCreator("LemonMilk.otf", 4, 2, 2, 5);
-		BitmapFont bitmapFont = fontCreator.generateFont((int) buttonHeight / 3);
+		BitmapFont bitmapFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, (int) buttonHeight / 3);
 
 		buttonSkin.add("default", bitmapFont);
 

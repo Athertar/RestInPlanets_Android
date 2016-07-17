@@ -51,10 +51,8 @@ public class LoginScreen implements Screen {
 
 	public LoginScreen(Main main) {
 		this.main = main;
-		fontCreator = new FontCreator("LemonMilk.otf", 4, 2, 2, 5);
-		textFont = fontCreator.generateFont(64);
-		smallTextFont = fontCreator.generateFont(46);
-		fontCreator.dispose();
+		textFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, 64);
+		smallTextFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, 64);
 	}
 
 	@Override

@@ -23,9 +23,8 @@ public class PlanetGroup extends Group{
 
 	private Planet planet;
 
-	private FontCreator fontCreator = new FontCreator("LemonMilk.otf", 4, 2, 2, 5);
-	private BitmapFont smallTextFont = fontCreator.generateFont(46);
-	private BitmapFont textFont = fontCreator.generateFont(96);
+	private BitmapFont smallTextFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, 46);
+	private BitmapFont textFont = FontCreator.createFont("LemonMilk.otf", 4, 2, 2, 5, 96);
 
 	private TextButton.TextButtonStyle textButtonStyle;
 	private TextField.TextFieldStyle textFieldStyle;
@@ -48,10 +47,9 @@ public class PlanetGroup extends Group{
 	public PlanetGroup(Planet planet) {
 		this.planet = planet;
 		create();
-		this.fontCreator.dispose();
 	}
 
-	public PlanetGroup(Planet planet, FontCreator fontCreator) {
+	/*public PlanetGroup(Planet planet, FontCreator fontCreator) {
 		this.planet = planet;
 		this.fontCreator = fontCreator;
 		create();
@@ -65,7 +63,7 @@ public class PlanetGroup extends Group{
 		this.smallTextFont = fontCreator.generateFont(smallTextFontSize);
 		create();
 		this.fontCreator.dispose();
-	}
+	}*/
 
 	public void create() {
 		buttonSkin = new Skin();
