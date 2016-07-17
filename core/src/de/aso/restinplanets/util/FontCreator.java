@@ -38,6 +38,4 @@ public class FontCreator {
 			return bitmapFont;
 		}
 	}
-
-
 }

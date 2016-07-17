@@ -14,7 +14,7 @@
         android:theme="@style/GdxTheme" >
         <activity
             android:name="de.aso.restinplanets.AndroidLauncher"
-            android:label="@string/app_name" 
+            android:label="Rest In Planets"
             android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
             <intent-filter>

@@ -138,7 +138,7 @@ public class PlanetSelectionScreen implements Screen {
 
 		@Override
 		public void changed(ChangeEvent event, Actor actor) {
-			main.setScreen(new PlanetScreen(planet));
+			main.showPlanetScreen(planet.getPlanetID());
 		}
 	}
 }

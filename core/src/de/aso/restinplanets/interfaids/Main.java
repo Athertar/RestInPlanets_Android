@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 import de.aso.restinplanets.net.Client;
+import de.aso.restinplanets.net.Planet;
 
 public class Main extends Game {
 
@@ -41,6 +42,14 @@ public class Main extends Game {
 	@Override
 	public void render() {
 		super.render();
+	}
+
+	public void showPlanetScreen(long planetID) {
+		try {
+			setScreen(new PlanetScreen(client.requestPlanet(planetID)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
