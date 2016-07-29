@@ -42,20 +42,21 @@ public class PlanetScreen implements Screen {
 		this.stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 
+		float height = 100;
+		float width = Gdx.graphics.getWidth() / 4;
+
 		Table table = new Table();
 		table.setFillParent(true);
 		table.left().top();
 
-		TextButton returnButton = new TextButton("Back", RIPStyle.getButtonSkin(200));
+		TextButton returnButton = new TextButton("Back", RIPStyle.getButtonSkin(2 * height));
+		returnButton.setWidth(Gdx.graphics.getWidth());
 		returnButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				PlanetScreen.this.main.returnToPlanetSelection();
 			}
 		});
-
-		float height = 100;
-		float width = Gdx.graphics.getWidth() / 4;
 
 		TextField planetName = new TextField("Planet " + planet.getPlanetID(), RIPStyle.getTextFieldSkin(height));
 		TextField aluminium = new TextField("Aluminium", RIPStyle.getTextFieldSkin(height));
@@ -78,6 +79,7 @@ public class PlanetScreen implements Screen {
 		asoiumAmount.setAlignment(CENTER);
 
 		table.add(planetName).width(width).height(height);
+		table.row();
 		table.add(titanium).width(width).height(height);
 		table.add(aluminium).width(width).height(height);
 		table.add(silicon).width(width).height(height);
