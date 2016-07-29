@@ -3,14 +3,9 @@ package de.aso.restinplanets.interfaids;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -18,9 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import de.aso.restinplanets.net.Client;
 import de.aso.restinplanets.net.Planet;
-import de.aso.restinplanets.util.FontCreator;
 import de.aso.restinplanets.util.RIPStyle;
 
 public class PlanetSelectionScreen implements Screen {
