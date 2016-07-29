@@ -11,9 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import java.util.ArrayList;
+
+import de.aso.restinplanets.net.Building;
 import de.aso.restinplanets.net.Planet;
 import de.aso.restinplanets.util.RIPStyle;
 
+import static com.badlogic.gdx.Input.Keys.C;
 import static com.badlogic.gdx.Input.Keys.CENTER;
 
 public class PlanetScreen implements Screen {
@@ -21,19 +25,21 @@ public class PlanetScreen implements Screen {
 	private Stage stage;
 	private final Main main;
 	private Planet planet;
+	private ArrayList<Building> buildings;
 	private TextField aluminiumAmount;
 	private TextField siliconAmount;
 	private TextField titaniumAmount;
 	private TextField asoiumAmount;
 
-	public PlanetScreen(Planet planet, Main main) {
+	public PlanetScreen(Planet planet, ArrayList<Building> buildings, Main main) {
 		this.main = main;
-		this.stage = new Stage();
 		this.planet = planet;
+		this.buildings = buildings;
 	}
 
 	@Override
 	public void show() {
+		this.stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 
 		Table table = new Table();
@@ -51,37 +57,44 @@ public class PlanetScreen implements Screen {
 		float height = 100;
 		float width = Gdx.graphics.getWidth() / 4;
 
-		TextField aluminium = new TextField("Titan", RIPStyle.getTextFieldSkin(height));
-		TextField silicon = new TextField("Aluminium", RIPStyle.getTextFieldSkin(height));
-		TextField titanium = new TextField("Silicon", RIPStyle.getTextFieldSkin(height));
+		TextField planetName = new TextField("Planet " + planet.getPlanetID(), RIPStyle.getTextFieldSkin(height));
+		TextField aluminium = new TextField("Aluminium", RIPStyle.getTextFieldSkin(height));
+		TextField silicon = new TextField("Silicon", RIPStyle.getTextFieldSkin(height));
+		TextField titanium = new TextField("Titanium", RIPStyle.getTextFieldSkin(height));
 		TextField asoium = new TextField("Asoium", RIPStyle.getTextFieldSkin(height));
+		aluminiumAmount = new TextField("", RIPStyle.getTextFieldSkin(height));
+		siliconAmount = new TextField("", RIPStyle.getTextFieldSkin(height));
+		titaniumAmount = new TextField("", RIPStyle.getTextFieldSkin(height));
+		asoiumAmount = new TextField("", RIPStyle.getTextFieldSkin(height));
 
-		aluminiumAmount = new TextField("Titan", RIPStyle.getTextFieldSkin(height));
-		siliconAmount = new TextField("Aluminium", RIPStyle.getTextFieldSkin(height));
-		titaniumAmount = new TextField("Silicon", RIPStyle.getTextFieldSkin(height));
-		asoiumAmount = new TextField("Asoium", RIPStyle.getTextFieldSkin(height));
-
+		planetName.setAlignment(CENTER);
 		aluminium.setAlignment(CENTER);
 		silicon.setAlignment(CENTER);
 		titanium.setAlignment(CENTER);
 		asoium.setAlignment(CENTER);
-
 		aluminiumAmount.setAlignment(CENTER);
 		siliconAmount.setAlignment(CENTER);
 		titaniumAmount.setAlignment(CENTER);
 		asoiumAmount.setAlignment(CENTER);
 
+		table.add(planetName).width(width).height(height);
+		table.add(titanium).width(width).height(height);
 		table.add(aluminium).width(width).height(height);
 		table.add(silicon).width(width).height(height);
-		table.add(titanium).width(width).height(height);
 		table.add(asoium).width(width).height(height);
 		table.row();
 
+		table.add(titaniumAmount).width(width).height(height);
 		table.add(aluminiumAmount).width(width).height(height);
 		table.add(siliconAmount).width(width).height(height);
-		table.add(titaniumAmount).width(width).height(height);
 		table.add(asoiumAmount).width(width).height(height);
 		table.row();
+
+		for (int i = 0; i < buildings.size(); i++) {
+			TextField textField = new TextField(buildings.get(i).getName(), RIPStyle.getTextFieldSkin(height));
+			table.add(textField).colspan(4).height(height).width(Gdx.graphics.getWidth());
+			table.row();
+		}
 
 		stage.addActor(returnButton);
 		stage.addActor(table);

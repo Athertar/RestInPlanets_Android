@@ -68,6 +68,10 @@ public class Building {
 		return (resourcesChange[3] * MILLISECONDS_PER_SECOND) / (TONS * TICK_TIME);
 	}
 
+	public String getName() {
+		return  name;
+	}
+
 }
 
 

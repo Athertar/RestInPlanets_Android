@@ -5,8 +5,11 @@ import com.badlogic.gdx.Gdx;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 
+import de.aso.restinplanets.net.Building;
 import de.aso.restinplanets.net.Client;
+import de.aso.restinplanets.net.Planet;
 
 public class Main extends Game {
 
@@ -20,7 +23,7 @@ public class Main extends Game {
 			public void run() {
 				try {
 					client = new Client(InetAddress.getByName("restinplanets.ddns.net"), 6666);
-					Thread.sleep(4000);
+					Thread.sleep(1000);
 					Gdx.app.postRunnable(new Runnable() {
 						@Override
 						public void run() {
@@ -49,7 +52,9 @@ public class Main extends Game {
 			@Override
 			public void run() {
 				try {
-					setScreen(new PlanetScreen(client.requestPlanet(planetID), Main.this));
+					Planet planet = client.requestPlanet(planetID);
+					ArrayList<Building> buildings = client.requestBuildingsOnPlanet(planetID);
+					setScreen(new PlanetScreen(planet, buildings, Main.this));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
