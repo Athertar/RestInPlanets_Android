@@ -68,7 +68,7 @@ public class Main extends Game {
 			@Override
 			public void run() {
 				try {
-					setScreen(new PlanetSelectionScreen(client.requestPlayersPlanets(playerName), Main.this));
+					setScreen(new PlanetSelectionScreen(client.requestPlayerPlanetIDs(playerName), Main.this));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -81,7 +81,7 @@ public class Main extends Game {
 			@Override
 			public void run() {
 				try {
-					setScreen(new PlanetSelectionScreen(client.requestPlayersPlanets(player), Main.this));
+					setScreen(new PlanetSelectionScreen(client.requestPlayerPlanetIDs(player), Main.this));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

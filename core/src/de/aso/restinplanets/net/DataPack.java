@@ -14,6 +14,8 @@ public class DataPack {
 	public static final int REQUEST_PLAYERS_PLANETS = 12;
 	public static final int END_PLANET_LIST = 13;
 	public static final int INVALID_PLAYER_NAME = 14;
+	public static final int REQUEST_PLAYER_PLANET_IDS = 15;
+	public static final int PLAYER_PLANET_IDS = 16;
 
 	public int dataPackType;
 

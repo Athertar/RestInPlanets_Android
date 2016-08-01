@@ -22,7 +22,6 @@ public class Client {
 
 	/**
 	 * sends a verifications request to the server
-	 *
 	 * @param username
 	 * @param password
 	 * @return true if verification succeeded
@@ -35,14 +34,13 @@ public class Client {
 
 		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 		password = password + salt;
-		messageDigest.update(password.getBytes());
-		DataPack loginRequest = new DataPack(DataPack.LOGIN_REQUEST);
-		loginRequest.strings = new String[]{username};
+		messageDigest.update(password.getBytes());DataPack loginRequest = new DataPack(DataPack.LOGIN_REQUEST);
+		loginRequest.strings = new String[] {username};
 		loginRequest.bytes = messageDigest.digest();
-		loginRequest.longs = new long[]{salt};
+		loginRequest.longs = new long[] {salt};
 		dataPackWriter.writeDataPack(loginRequest);
 
-		DataPack verification = dataPackReader.readDataPack();
+		DataPack verification =  dataPackReader.readDataPack();
 		if (verification.longs[0] == loginRequest.longs[0]) {
 			return true;
 		} else {
@@ -52,14 +50,13 @@ public class Client {
 
 	/**
 	 * Requests a planet from the Server.
-	 *
 	 * @param ID
 	 * @return null if planet does not exist
 	 * @throws IOException
 	 */
 	public Planet requestPlanet(long ID) throws IOException {
 		DataPack planetRequest = new DataPack(DataPack.PLANET_REQUEST);
-		planetRequest.longs = new long[]{ID};
+		planetRequest.longs = new long[] {ID};
 		dataPackWriter.writeDataPack(planetRequest);
 		DataPack planetResponse = dataPackReader.readDataPack();
 		if (planetResponse.dataPackType == DataPack.INVALID_PLANET_ID) {
@@ -73,21 +70,19 @@ public class Client {
 	 * Requests all buildings on a specific planet.
 	 * List is empty when the planet does not contain any
 	 * buildings.
-	 *
 	 * @param ID
 	 * @return null if the planet is invalid
 	 * @throws IOException
 	 */
 	public ArrayList<Building> requestBuildingsOnPlanet(long ID) throws IOException {
 		DataPack buildingRequest = new DataPack(DataPack.BUILDINGS_ON_PLANET);
-		buildingRequest.longs = new long[]{ID};
+		buildingRequest.longs = new long[] {ID};
 		dataPackWriter.writeDataPack(buildingRequest);
 		return Building.getFromDataPack(dataPackReader.readDataPack());
 	}
 
 	/**
 	 * Requests the construction of a building on a specific planet.
-	 *
 	 * @param planetID
 	 * @param buildingID
 	 * @return true if construction succeeded
@@ -95,21 +90,18 @@ public class Client {
 	 */
 	public boolean requestConstruction(long planetID, long buildingID) throws IOException {
 		DataPack constructionRequest = new DataPack(DataPack.CONSTRUCTION_REQUEST);
-		constructionRequest.longs = new long[]{planetID, buildingID};
+		constructionRequest.longs = new long[] { planetID, buildingID };
 		dataPackWriter.writeDataPack(constructionRequest);
 		DataPack constructionResponse = dataPackReader.readDataPack();
 		return constructionResponse.dataPackType == DataPack.CONSTRUCTION_SUCCESS;
 	}
 
-	public ArrayList<Planet> requestPlayersPlanets(String playerName) throws IOException {
-		DataPack request = new DataPack(DataPack.REQUEST_PLAYERS_PLANETS);
-		request.strings = new String[]{playerName};
+	public long[] requestPlayerPlanetIDs(String playerName) throws IOException {
+		DataPack request = new DataPack(DataPack.REQUEST_PLAYER_PLANET_IDS);
+		request.strings = new String[] {playerName};
 		dataPackWriter.writeDataPack(request);
-		ArrayList<Planet> planets = new ArrayList<Planet>();
-		DataPack response;
-		while ((response = dataPackReader.readDataPack()).dataPackType != DataPack.END_PLANET_LIST) {
-			planets.add(new Planet(response));
-		}
-		return planets;
+		DataPack response = dataPackReader.readDataPack();
+		return response.longs;
 	}
+
 }
